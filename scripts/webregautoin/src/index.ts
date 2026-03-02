@@ -44,8 +44,28 @@ async function main(): Promise<void> {
         headless: !debug
     });
 
-    const config: IConfig = JSON.parse(
-        fs.readFileSync(path.join(__dirname, "..", "credentials.json")).toString());
+    // const config: IConfig = JSON.parse(
+    //     fs.readFileSync(path.join(__dirname, "..", "credentials.json")).toString());
+
+    // moved to env vars for "better" security (not really, but it's something)
+    const username = process.env.WEBREG_USERNAME;
+    const password = process.env.WEBREG_PASSWORD;
+
+    if (!username || !password) {
+        console.error("Missing WEBREG_USERNAME or WEBREG_PASSWORD environment variables.");
+        process.exit(1);
+    }
+
+    const config: IConfig = {
+        webreg: {
+            username: username,
+            password: password
+        },
+        settings: {
+            loginType: process.env.LOGIN_TYPE || "push",
+            automaticPushEnabled: process.env.AUTOMATIC_PUSH_ENABLED === "true"
+        }
+    };
 
     const term = args.values.term?.toUpperCase();
     let termInfo: ITermInfo | null = null;
