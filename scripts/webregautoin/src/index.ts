@@ -12,6 +12,52 @@ import * as http from "http";
 import { parseArgs } from 'node:util';
 import { PUSH, fetchCookies, getTermSeqId, logNice, printHelpMessage } from "./fns";
 import { IConfig, Context, ITermInfo } from "./types";
+import { createInterface } from "readline";
+import { Writable } from "stream";
+
+async function credentialPrompt() {
+    const ask = (query: string, hidden: boolean): Promise<string> => {
+        return new Promise((resolve) => {
+            let muted = false;
+            const mutableStdout = new Writable({
+                write: function (chunk, encoding, callback) {
+                    // Print characters only if not muted, OR if the character is a newline
+                    if (!muted || chunk.toString() === '\n' || chunk.toString() === '\r') {
+                        process.stdout.write(chunk, encoding);
+                    }
+                    callback();
+                }
+            });
+
+            const rl = createInterface({
+                input: process.stdin,
+                output: mutableStdout,
+                terminal: true
+            });
+
+            mutableStdout.write(query);
+            muted = hidden;
+            
+            rl.question("", (answer) => {
+                rl.close();
+                if (hidden) console.log(); // Add a newline since the input was muted
+                resolve(answer);
+            });
+        });
+    };
+
+    console.log("\n============================================================");
+    console.log(" Waiting for credentials.");
+    console.log(" If running detached, attach to this container to continue.");
+    console.log("============================================================\n");
+
+    const username = await ask("Enter your TritonLink Username: ", false);
+    const password = await ask("Enter your TritonLink Password: ", true);
+    console.log("\nCredentials saved to RAM. Starting server...");
+    
+    return { username, password };
+}
+
 
 async function main(): Promise<void> {
     const args = parseArgs({
@@ -48,12 +94,13 @@ async function main(): Promise<void> {
     //     fs.readFileSync(path.join(__dirname, "..", "credentials.json")).toString());
 
     // moved to env vars for "better" security (not really, but it's something)
-    const username = process.env.WEBREG_USERNAME;
-    const password = process.env.WEBREG_PASSWORD;
+    let username = process.env.WEBREG_USERNAME;
+    let password = process.env.WEBREG_PASSWORD;
 
     if (!username || !password) {
-        console.error("Missing WEBREG_USERNAME or WEBREG_PASSWORD environment variables.");
-        process.exit(1);
+        const credentials = await credentialPrompt();
+        username = credentials.username;
+        password = credentials.password;
     }
 
     const config: IConfig = {
