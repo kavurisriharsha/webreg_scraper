@@ -21,4 +21,19 @@ WORKDIR /app
 
 RUN ["chmod", "+x", "/start.sh"]
 
-ENTRYPOINT ["/start.sh"]
+# echo "Installing dependencies..."
+# npm i -g typescript
+
+# npm i
+
+# echo "Compiling TypeScript..."
+# npm run compile
+
+# exec node out/index.js --port 3000
+# EOF
+
+RUN ["npm", "install", "-g", "typescript"]
+RUN ["npm", "install"]
+RUN ["npm", "run", "compile"]
+
+ENTRYPOINT ["node", "out/index.js", "--port", "3000"]
