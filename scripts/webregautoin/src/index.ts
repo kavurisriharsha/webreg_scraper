@@ -14,48 +14,34 @@ import { PUSH, fetchCookies, getTermSeqId, logNice, printHelpMessage } from "./f
 import { IConfig, Context, ITermInfo } from "./types";
 import { createInterface } from "readline";
 import { Writable } from "stream";
+import prompts from "prompts";
 
 async function credentialPrompt() {
-    const ask = (query: string, hidden: boolean): Promise<string> => {
-        return new Promise((resolve) => {
-            let muted = false;
-            const mutableStdout = new Writable({
-                write: function (chunk, encoding, callback) {
-                    // Print characters only if not muted, OR if the character is a newline
-                    if (!muted || chunk.toString() === '\n' || chunk.toString() === '\r') {
-                        process.stdout.write(chunk, encoding);
-                    }
-                    callback();
-                }
-            });
-
-            const rl = createInterface({
-                input: process.stdin,
-                output: mutableStdout,
-                terminal: true
-            });
-
-            mutableStdout.write(query);
-            muted = hidden;
-            
-            rl.question("", (answer) => {
-                rl.close();
-                if (hidden) console.log(); // Add a newline since the input was muted
-                resolve(answer);
-            });
-        });
-    };
-
     console.log("\n============================================================");
     console.log(" Waiting for credentials.");
     console.log(" If running detached, attach to this container to continue.");
     console.log("============================================================\n");
 
-    const username = await ask("Enter your TritonLink Username: ", false);
-    const password = await ask("Enter your TritonLink Password: ", true);
+    const response = await prompts([
+        {
+            type: 'text',
+            name: 'username',
+            message: 'Enter your TritonLink Username:'
+        },
+        {
+            type: 'password',
+            name: 'password',
+            message: 'Enter your TritonLink Password:',
+            mask: '*' 
+        }
+    ]);
+
     console.log("\nCredentials saved to RAM. Starting server...");
     
-    return { username, password };
+    return { 
+        username: response.username, 
+        password: response.password 
+    };
 }
 
 
