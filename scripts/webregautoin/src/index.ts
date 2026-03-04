@@ -14,7 +14,7 @@ import { PUSH, fetchCookies, getTermSeqId, logNice, printHelpMessage } from "./f
 import { IConfig, Context, ITermInfo } from "./types";
 import { createInterface } from "readline";
 import { Writable } from "stream";
-import prompts from "prompts";
+import prompts = require("prompts");
 
 async function credentialPrompt() {
     console.log("\n============================================================");
