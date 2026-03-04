@@ -80,8 +80,8 @@ async function main(): Promise<void> {
     //     fs.readFileSync(path.join(__dirname, "..", "credentials.json")).toString());
 
     // moved to env vars for "better" security (not really, but it's something)
-    let username = process.env.WEBREG_USERNAME;
-    let password = process.env.WEBREG_PASSWORD;
+    let username = process.env.WEBREG_USERNAME || "";
+    let password = process.env.WEBREG_PASSWORD || "";
 
     if (!username || !password) {
         const credentials = await credentialPrompt();
