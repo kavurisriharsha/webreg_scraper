@@ -144,8 +144,29 @@ async function main(): Promise<void> {
         process.exit(1);
     }
 
+    let isReady = false;
+
     // Very basic server.
     const server = http.createServer(async (req, res) => {
+        if (req.url === "/healthy") {
+            if (isReady) {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({
+                        status: "ok"
+                    })
+                );
+            } else {
+                res.writeHead(503, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({
+                        status: "waiting for login"
+                    })
+                );
+            }
+            return;
+        }
+
         if (req.method !== "GET") {
             res.end(
                 JSON.stringify({
@@ -193,7 +214,15 @@ async function main(): Promise<void> {
     }
 
     // Initial warmup call.
-    await fetchCookies(context, browser, true);
+    try {
+        logNice("Init", "Performing initial health check...");
+        await fetchCookies(context, browser, true);
+        isReady = true;
+    } catch (e) {
+        logNice("Init", "Health check failed. Restart container and try again.");
+        logNice("Init", "Error details:");
+        console.error(e);
+    }
 }
 
 main().then();

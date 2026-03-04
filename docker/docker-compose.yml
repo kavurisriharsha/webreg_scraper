@@ -4,6 +4,7 @@ services:
     container_name: login
     stdin_open: true
     tty: true
+    shm_size: '1gb'
     ports:
       - "3000:3000"
     networks:
@@ -11,9 +12,10 @@ services:
         ipv4_address: 172.20.0.10
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/cookie"]
-      interval: 5s
+      interval: 30s
       timeout: 10s
-      retries: 50
+      retries: 5
+      start_period: 10s
 
 
   scraper:
