@@ -2,6 +2,8 @@ services:
   login:
     build: ./login
     container_name: login
+    stdin_open: true 
+    tty: true
     ports:
       - "3000:3000"
     networks:
