@@ -11,7 +11,7 @@ services:
       scraper_net:
         ipv4_address: 172.20.0.10
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/cookie"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthy"]
       interval: 30s
       timeout: 10s
       retries: 5
