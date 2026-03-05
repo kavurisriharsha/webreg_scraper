@@ -39,9 +39,9 @@ To run the scraper using Docker, follow the instructions below.
     ```bash
     docker compose up -d
     ```
-    > [!NOTE]
-    > The first time you run this command, it will take a while to build the Docker
-    > images for the scraper and the webregautoin service, so be patient. Subsequent runs will be much faster.
+> [!NOTE]
+> The first time you run this command, it will take a while to build the Docker
+> images for the scraper and the webregautoin service, so be patient. Subsequent runs will be much faster.
 3. In a separate terminal, run the command
     ```bash
     docker attach login
@@ -52,22 +52,21 @@ To run the scraper using Docker, follow the instructions below.
 4. The scraper should now be running and automatically logging in when needed. 
 
 ## Implementation Details
-Two containers are used in this setup, `login` and `scraper`. 
+Two containers are used in this setup, `login` and `scraper`.
 
 The `login` container runs the `webregautoin` script. This script logs you into 
 WebReg and serves cookies to the `scraper` container whenever they are needed. 
-This is currently being built from the `node:lts-slim` image. If you so wish you 
-can change this. I've yet to test newer versions of Node.
+This is currently being built from the `node:lts-slim` image. 
 
 The `scraper` container runs the actual scraper. It is built from the `rust:slim-trixie`
-image. Again, you can change this if you want, but I haven't tested it with other images.
+image. 
 
 ### Compose
 The compose file is pretty straightforward. It just defines the two services and
 sets up a shared network and a volume to store scraped data into. You can modify
 it as you see fit, but the current setup should get you up and running. 
 
-I highly recommend keeping the network configuration in bridge mode in order to 
+I highly recommend keeping the network configuration in [bridge mode](https://docs.docker.com/engine/network/drivers/bridge/) in order to 
 ensure that you aren't exposing your cookies outside of where strictly necessary.
 You can read more about Docker networking [here](https://docs.docker.com/network/).
 Admittedly this is a pretty basic setup, but it does the job. 

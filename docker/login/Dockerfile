@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
-ADD https://github.com/kavurisriharsha/webreg_scraper.git#docker:scripts/webregautoin /app
-ADD https://github.com/kavurisriharsha/webreg_scraper.git#docker:docker/login /
+ADD https://github.com/UCSD-Historical-Enrollment-Data/webreg_scraper.git#docker:scripts/webregautoin /app
+ADD https://github.com/UCSD-Historical-Enrollment-Data/webreg_scraper.git#docker:docker/login /
 
 # COPY ../webreg_scraper/scripts/webregautoin/ /app
 

@@ -11,9 +11,9 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-ADD https://github.com/kavurisriharsha/webreg_scraper.git#docker:crates /app/crates
-ADD https://raw.githubusercontent.com/kavurisriharsha/webreg_scraper/refs/heads/docker/Cargo.lock /app
-ADD https://raw.githubusercontent.com/kavurisriharsha/webreg_scraper/refs/heads/docker/Cargo.toml /app
+ADD https://github.com/UCSD-Historical-Enrollment-Data/webreg_scraper.git#docker:crates /app/crates
+ADD https://raw.githubusercontent.com/UCSD-Historical-Enrollment-Data/webreg_scraper/refs/heads/docker/Cargo.lock /app
+ADD https://raw.githubusercontent.com/UCSD-Historical-Enrollment-Data/webreg_scraper/refs/heads/docker/Cargo.toml /app
 
 WORKDIR /app
 

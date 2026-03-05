@@ -76,9 +76,6 @@ async function main(): Promise<void> {
         headless: !debug
     });
 
-    // const config: IConfig = JSON.parse(
-    //     fs.readFileSync(path.join(__dirname, "..", "credentials.json")).toString());
-
     // moved to env vars for "better" security (not really, but it's something)
     let username = process.env.WEBREG_USERNAME || "";
     let password = process.env.WEBREG_PASSWORD || "";
