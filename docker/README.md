@@ -27,7 +27,8 @@ Docker Compose is also required, but it should come bundled with Docker.
 - I strongly recommend having `tmux` or some other terminal multiplexer installed
 to make it easier to manage steps 3 and 4 in the setup process below, but it is
 not strictly required. You can also just open up multiple terminal windows.
-- Some basic familiarity with Docker and the command line will be helpful.
+- Some basic familiarity with Docker and the command line will be helpful. Refer
+to the [troubleshooting](#troubleshooting) section below.
 
 
 ## Setup 
@@ -39,6 +40,7 @@ To run the scraper using Docker, follow the instructions below.
     ```bash
     docker compose up -d
     ```
+    *This is also the command you will use to start the scraper in the future, so remember it.*
 > [!NOTE]
 > The first time you run this command, it will take a while to build the Docker
 > images for the scraper and the webregautoin service, so be patient. Subsequent runs will be much faster.
@@ -74,4 +76,21 @@ Admittedly this is a pretty basic setup, but it does the job.
 Currently, the `scraper` container is configured to mount the `data` directory 
 as a volume so that scraped data is stored on your local machine. This is also 
 where the `config.json` file is stored, which is required for it to run. 
+
+## Troubleshooting
+If you run into any Docker issues these commands might come in handy:
+- `docker compose up --force-recreate` - Recreate the containers without rebuilding
+the images. This is useful if you want to reset the *state* of the containers. You 
+might want to do this if you see a message that says that a container is unhealthy 
+or if you see a message that says "Container failed to start" but you aren't sure why. 
+- `docker compose logs` - View the logs for all containers. You can also specify
+a specific container, e.g., `docker compose logs scraper`.
+- `docker compose down` - Stop and remove all containers. You can also specify
+a specific container, e.g., `docker compose down scraper`.
+- `docker compose up -d --build` - Rebuild the images and restart the containers. 
+You might want to do this after a new release or if you make any changes to the 
+Dockerfiles yourself.
+might want to run this if you see a message that says "Container failed to start"
+- `docker ps` - View all running containers. This is useful to check if your containers
+are running properly.
 
