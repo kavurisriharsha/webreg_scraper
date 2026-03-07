@@ -19,7 +19,7 @@ WORKDIR /app
 
 # COPY --chmod=+x ./start.sh /start.sh
 
-RUN ["chmod", "+x", "/start.sh"]
+# RUN ["chmod", "+x", "/start.sh"]
 
 # echo "Installing dependencies..."
 # npm i -g typescript
